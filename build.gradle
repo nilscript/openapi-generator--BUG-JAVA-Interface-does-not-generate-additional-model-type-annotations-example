@@ -1,0 +1,39 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+    id 'java'
+    id 'io.quarkus'
+    id 'org.openapi.generator' version "6.4.0"
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+group 'org.acme'
+version '1.0.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+task openApiGenerateJaxrs(type: GenerateTask) {
+    generatorName = "jaxrs-spec"
+    inputSpec = "$projectDir/contract.yaml"
+    outputDir = "$buildDir/generated-openapi"
+    apiPackage = "com.example.api.resource"
+    invokerPackage = "com.example.api.invoker"
+    modelPackage = "com.example.api.model"
+    configOptions = [
+        additionalModelTypeAnnotation: "@javax.enterprise.context.ApplicationScoped",
+        library: "quarkus",
+        interfaceOnly: "true",
+        useSwaggerAnnotations: "false"
+    ]
+    globalProperties = [
+        apiTests: "false",
+        modelTests: "false"
+    ]
+}
